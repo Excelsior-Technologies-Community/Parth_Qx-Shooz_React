@@ -21,7 +21,7 @@ import blog2 from '../assets/images/blog-2.png';
 import blog3 from '../assets/images/blog-3.png';
 import blog4 from '../assets/images/blog-4.png';
 import newsletterImage from '../assets/images/newslatter-image.jpg';
-import { Search, User, Heart, ShoppingBag, ChevronDown, ArrowRight } from 'lucide-react';
+import { Search, User, Heart, ShoppingBag, ChevronDown, ArrowRight, Menu, X } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 /* --- AnnouncementBar --- */
@@ -100,6 +100,7 @@ export const Header = () => {
   const pathname = location.pathname;
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
   const [isPagesDropdownOpen, setIsPagesDropdownOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cart, wishlist, setIsCartOpen } = useAppContext();
 
   const totalCartQty = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -108,6 +109,19 @@ export const Header = () => {
   return (
     <header className="site-header">
       <div className="container flex-between header-content">
+        {/* MOBILE LEFT ICONS */}
+        <div className="mobile-menu-toggle-wrapper">
+          <button 
+            className="mobile-menu-toggle"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile menu"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+          <button className="icon-btn search-btn mobile-search">
+            <Search size={20} strokeWidth={1.5} />
+          </button>
+        </div>
         
         {/* LOGO */}
         <div className="header-logo">
@@ -122,7 +136,7 @@ export const Header = () => {
         </div>
 
         {/* NAVIGATION */}
-        <nav className="header-nav">
+        <nav className={`header-nav ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           <ul className="nav-list flex-center">
             <li className={`nav-item ${pathname === '/' ? 'active' : ''}`}>
               <Link to="/" className="nav-link">Home</Link>
@@ -257,7 +271,7 @@ export const Header = () => {
 
         {/* ICONS */}
         <div className="header-icons flex-center">
-          <button className="icon-btn search-btn">
+          <button className="icon-btn search-btn desktop-search">
             <Search size={20} strokeWidth={1.5} />
           </button>
           <button className="icon-btn user-btn">
