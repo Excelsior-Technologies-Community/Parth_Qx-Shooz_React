@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Search, User, Heart, ShoppingBag, ChevronDown, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { AnnouncementBar, TopBar, Header, Footer } from './Home';
+import { useAppContext } from '../context/AppContext';
 
 /* --- Breadcrumbs --- */
 const Breadcrumbs = () => {
@@ -230,30 +231,48 @@ const productsData = [
   { id: 12, name: 'Soft Leather Moccasins', price: '$25.00', brand: 'ComfortCreek', image: 'https://qx-shooz.myshopify.com/cdn/shop/files/product-12_560514e6-9f15-4d62-aa87-e2863080cc21.jpg?v=1731314902&width=533' }
 ];
 
-const ProductCard = ({ product }) => (
-  <div className="product-card-shop">
-    <div className="product-image-wrapper">
-      {product.badge && <span className="product-badge">{product.badge}</span>}
-      <img src={product.image} alt={product.name} />
-      <div className="product-actions-overlay">
-        <button className="action-btn"><Heart size={18} /></button>
-        <button className="action-btn"><Search size={18} /></button>
-        <button className="action-btn"><ShoppingBag size={18} /></button>
+const ProductCard = ({ product }) => {
+  const { addToCart, toggleWishlist, isWishlisted } = useAppContext();
+  const wishlisted = isWishlisted(product.id);
+
+  return (
+    <div className="product-card-shop">
+      <div className="product-image-wrapper">
+        {product.badge && <span className="product-badge">{product.badge}</span>}
+        <img src={product.image} alt={product.name} />
+        <div className="product-actions-overlay">
+          <button 
+            className={`action-btn ${wishlisted ? 'active' : ''}`}
+            onClick={() => toggleWishlist(product)}
+            style={{ color: wishlisted ? '#ae3f4f' : 'inherit' }}
+            title={wishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+          >
+            <Heart size={18} fill={wishlisted ? '#ae3f4f' : 'none'} />
+          </button>
+          <button className="action-btn" title="Quick View"><Search size={18} /></button>
+          <button 
+            className="action-btn" 
+            title="Add to Cart"
+            onClick={() => addToCart(product, 'S')}
+          >
+            <ShoppingBag size={18} />
+          </button>
+        </div>
+      </div>
+      <div className="product-info-shop">
+        <div className="product-price-row">
+          <span className="current-price">{product.price}</span>
+          {product.oldPrice && <span className="old-price">{product.oldPrice}</span>}
+        </div>
+        <h3 className="product-name-shop">{product.name}</h3>
+        <p className="product-brand-shop">{product.brand}</p>
+        <button className="add-to-cart-btn-shop" onClick={() => addToCart(product, 'S')}>
+          <ShoppingBag size={16} /> ADD TO CART
+        </button>
       </div>
     </div>
-    <div className="product-info-shop">
-      <div className="product-price-row">
-        <span className="current-price">{product.price}</span>
-        {product.oldPrice && <span className="old-price">{product.oldPrice}</span>}
-      </div>
-      <h3 className="product-name-shop">{product.name}</h3>
-      <p className="product-brand-shop">{product.brand}</p>
-      <button className="add-to-cart-btn-shop">
-        <ShoppingBag size={16} /> ADD TO CART
-      </button>
-    </div>
-  </div>
-);
+  );
+};
 
 const ProductGridMain = () => {
   return (

@@ -22,6 +22,7 @@ import blog3 from '../assets/images/blog-3.png';
 import blog4 from '../assets/images/blog-4.png';
 import newsletterImage from '../assets/images/newslatter-image.jpg';
 import { Search, User, Heart, ShoppingBag, ChevronDown, ArrowRight } from 'lucide-react';
+import { useAppContext } from '../context/AppContext';
 
 /* --- AnnouncementBar --- */
 export const AnnouncementBar = () => {
@@ -99,6 +100,10 @@ export const Header = () => {
   const pathname = location.pathname;
   const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
   const [isPagesDropdownOpen, setIsPagesDropdownOpen] = useState(false);
+  const { cart, wishlist, setIsCartOpen } = useAppContext();
+
+  const totalCartQty = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const totalWishlistCount = wishlist.length;
 
   return (
     <header className="site-header">
@@ -236,9 +241,9 @@ export const Header = () => {
                 <li><Link to="/about-us">About Us</Link></li>
                 <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/faqs">Faqs</Link></li>
-                <li><Link to="/shop">Lookbook</Link></li>
-                <li><Link to="/shop">sizeguide</Link></li>
-                <li><Link to="/shop">Wishlist</Link></li>
+                <li><Link to="/lookbook">Lookbook</Link></li>
+                <li><Link to="/sizeguide">sizeguide</Link></li>
+                <li><Link to="/wishlist">Wishlist</Link></li>
               </ul>
             </li>
             <li className="nav-item">
@@ -258,13 +263,13 @@ export const Header = () => {
           <button className="icon-btn user-btn">
             <User size={20} strokeWidth={1.5} />
           </button>
-          <button className="icon-btn wishlist-btn position-relative flex-center">
+          <Link to="/wishlist" className="icon-btn wishlist-btn position-relative flex-center">
             <Heart size={20} strokeWidth={1.5} />
-            <span className="indicator flex-center">0</span>
-          </button>
-          <button className="icon-btn cart-btn flex-center">
+            <span className="indicator flex-center">{totalWishlistCount}</span>
+          </Link>
+          <button className="icon-btn cart-btn flex-center" onClick={() => setIsCartOpen(true)}>
             <ShoppingBag size={20} strokeWidth={1.5} />
-            <span className="cart-text">(0)</span>
+            <span className="cart-text">({totalCartQty})</span>
           </button>
         </div>
 
@@ -452,6 +457,8 @@ const productGridProducts = [
 ];
 
 const ProductGrid = () => {
+  const { addToCart, toggleWishlist, isWishlisted } = useAppContext();
+
   return (
     <section className="product-grid-section">
       <div className="container">
@@ -470,49 +477,97 @@ const ProductGrid = () => {
 
         {/* Product Grid */}
         <div className="product-grid">
-          {productGridProducts.map((product) => (
-            <div key={product.id} className="product-card">
-              
-              <div className="product-image-container">
-                <img src={product.image} alt={product.title} loading="lazy" />
+          {productGridProducts.map((product) => {
+            const wishlisted = isWishlisted(product.id);
+            return (
+              <div key={product.id} className="product-card product-card-shop">
                 
-                {product.hasCountdown && (
-                  <div className="countdown-timer">
-                    <div className="time-block">
-                      <span className="time-val">1630</span>
-                      <span className="time-label">Days</span>
-                    </div>
-                    <div className="time-block">
-                      <span className="time-val">18</span>
-                      <span className="time-label">Hours</span>
-                    </div>
-                    <div className="time-block">
-                      <span className="time-val">37</span>
-                      <span className="time-label">Mins</span>
-                    </div>
-                    <div className="time-block">
-                      <span className="time-val">38</span>
-                      <span className="time-label">Secs</span>
-                    </div>
+                <div className="product-image-container product-image-wrapper">
+                  <img src={product.image} alt={product.title} loading="lazy" />
+                  
+                  <div className="product-actions-overlay">
+                    <button 
+                      className={`action-btn ${wishlisted ? 'active' : ''}`}
+                      onClick={() => toggleWishlist(product)}
+                      style={{ color: wishlisted ? '#ae3f4f' : 'inherit' }}
+                      title={wishlisted ? 'Remove from Wishlist' : 'Add to Wishlist'}
+                    >
+                      <Heart size={18} fill={wishlisted ? '#ae3f4f' : 'none'} />
+                    </button>
+                    <button className="action-btn" title="Quick View"><Search size={18} /></button>
+                    <button 
+                      className="action-btn" 
+                      title="Add to Cart"
+                      onClick={() => addToCart(product, 'S')}
+                    >
+                      <ShoppingBag size={18} />
+                    </button>
                   </div>
-                )}
-              </div>
+                  
+                  {product.hasCountdown && (
+                    <div className="countdown-timer">
+                      <div className="time-block">
+                        <span className="time-val">1630</span>
+                        <span className="time-label">Days</span>
+                      </div>
+                      <div className="time-block">
+                        <span className="time-val">18</span>
+                        <span className="time-label">Hours</span>
+                      </div>
+                      <div className="time-block">
+                        <span className="time-val">37</span>
+                        <span className="time-label">Mins</span>
+                      </div>
+                      <div className="time-block">
+                        <span className="time-val">38</span>
+                        <span className="time-label">Secs</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
-              <div className="product-info">
-                {product.hasSwatches && (
-                  <div className="product-swatches">
-                    <span className="swatch black"></span>
-                    <span className="swatch grey"></span>
-                    <span className="swatch dark-grey"></span>
-                  </div>
-                )}
-                <div className="product-price">{product.price}</div>
-                <h3 className="product-title">{product.title}</h3>
-                <p className="product-vendor">{product.vendor}</p>
-              </div>
+                <div className="product-info">
+                  {product.hasSwatches && (
+                    <div className="product-swatches">
+                      <span className="swatch black"></span>
+                      <span className="swatch grey"></span>
+                      <span className="swatch dark-grey"></span>
+                    </div>
+                  )}
+                  <div className="product-price">{product.price}</div>
+                  <h3 className="product-title">{product.title}</h3>
+                  <p className="product-vendor">{product.vendor}</p>
+                  
+                  <button 
+                    className="add-to-cart-btn-shop" 
+                    onClick={() => addToCart(product, 'S')}
+                    style={{
+                      width: '100%',
+                      marginTop: '12px',
+                      padding: '10px',
+                      backgroundColor: '#333',
+                      color: '#fff',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                      fontSize: '12px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      transition: 'background-color 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.target.style.backgroundColor = '#ae3f4f'}
+                    onMouseLeave={(e) => e.target.style.backgroundColor = '#333'}
+                  >
+                    <ShoppingBag size={14} /> ADD TO CART
+                  </button>
+                </div>
 
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
       </div>
