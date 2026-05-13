@@ -5268,3 +5268,166 @@ a {
   opacity: 1;
   visibility: visible;
 }
+
+/* ==========================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ========================================== */
+
+@media (max-width: 991px) {
+  /* Header & Navigation */
+  .site-header .container.flex-between {
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px 0;
+    justify-content: center;
+  }
+  
+  .header-logo {
+    order: 1;
+  }
+  
+  .header-icons {
+    order: 2;
+  }
+  
+  .nav-menu {
+    order: 3;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .nav-list {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .nav-item {
+    margin: 0;
+  }
+  
+  /* Hero Sections */
+  .hero-title { font-size: 40px !important; }
+  .about-us-hero-title { font-size: 32px !important; }
+  .hero-slide { min-height: 400px; }
+
+  /* Generic Grids */
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 15px !important;
+  }
+  
+  .newsletter-wrapper {
+    flex-direction: column;
+  }
+  .newsletter-left {
+    padding: 40px 20px;
+    width: 100%;
+  }
+  .newsletter-right {
+    height: 250px;
+    width: 100%;
+  }
+  
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .about-us-hero-grid, .about-us-luxe-grid, .about-us-style-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Lookbook Grids */
+  .lookbook-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Top Bar */
+  .top-bar .container {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  /* Header */
+  .header-logo img {
+    max-width: 110px;
+  }
+  .nav-item {
+    font-size: 13px;
+  }
+
+  /* Hero */
+  .hero-title { font-size: 32px !important; }
+  .hero-subtitle { font-size: 12px !important; }
+  .hero-btn { padding: 12px 24px !important; }
+  
+  /* Categories & Grids */
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  .product-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Footer */
+  .footer-container {
+    grid-template-columns: 1fr !important;
+    gap: 30px !important;
+    text-align: center;
+  }
+  
+  .footer-column {
+    align-items: center;
+  }
+  
+  .newsletter-title {
+    font-size: 24px;
+  }
+  
+  /* Contact / About */
+  .benefits-row {
+    grid-template-columns: 1fr !important;
+  }
+  .contact-hero-content {
+    padding: 30px 15px;
+  }
+  .contact-info-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Shop page */
+  .shop-layout {
+    flex-direction: column;
+  }
+  .shop-sidebar {
+    width: 100%;
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Extremely small devices */
+  .product-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .category-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .hero-title { font-size: 26px !important; }
+  .header-icons {
+    gap: 8px;
+  }
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+  .lookbook-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
