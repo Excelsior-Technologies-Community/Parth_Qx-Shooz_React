@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Scraper scripts and temporary dumps
+*.py
+fetch*.js
+fetch*.mjs
+fetch*.cjs
+combine_components.cjs
+homepage*.html
+urls.txt
+output/
+
